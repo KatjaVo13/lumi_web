@@ -1,5 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, NgZone } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit, inject } from '@angular/core';
 import * as L from 'leaflet';
+import { LumiApi } from '../../services/lumi-api';
 
 @Component({
   selector: 'app-map-page',
@@ -7,16 +8,31 @@ import * as L from 'leaflet';
   templateUrl: './map-page.html',
   styleUrl: './map-page.scss'
 })
-export class MapPage implements AfterViewInit {
+export class MapPage implements AfterViewInit, OnInit {
   private map!: L.Map;
   private marker: L.Marker | null = null;
+  private lumiApi = inject(LumiApi);
 
   selectedCoordinates = 'Nothing selected yet';
+  backendStatus = 'Backend not checked yet';
 
   constructor(
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef
   ) {}
+
+  ngOnInit(): void {
+    this.lumiApi.getHealth().subscribe({
+      next: (response) => {
+        this.backendStatus = `Backend connected: ${JSON.stringify(response)}`;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.backendStatus = `Backend error: ${error.message}`;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -36,12 +52,10 @@ export class MapPage implements AfterViewInit {
 
         this.selectedCoordinates = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 
-        // Remove previous marker
         if (this.marker) {
           this.map.removeLayer(this.marker);
         }
 
-        // Add new marker
         this.marker = L.marker([lat, lng]).addTo(this.map);
 
         this.cdr.detectChanges();
