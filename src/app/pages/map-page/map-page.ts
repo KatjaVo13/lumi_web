@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit, inject } from '@angular/core';
 import * as L from 'leaflet';
-import { LumiApi, Suggestion } from '../../services/lumi-api';
+import { LumiApi, Suggestion, WeatherResponse } from '../../services/lumi-api';
 
 @Component({
   selector: 'app-map-page',
@@ -18,6 +18,9 @@ export class MapPage implements AfterViewInit, OnInit {
   backendStatus = 'Backend not checked yet';
   recommendations: Suggestion[] = [];
   isLoading = false;
+
+  weather: WeatherResponse | null = null;
+  weatherStatus = 'Weather not loaded yet';
 
   constructor(
     private ngZone: NgZone,
@@ -61,9 +64,28 @@ export class MapPage implements AfterViewInit, OnInit {
 
         this.selectedMarker = L.marker([lat, lng]).addTo(this.map);
 
+        this.loadWeather(lat, lng);
         this.loadRecommendations(lat, lng);
         this.cdr.detectChanges();
       });
+    });
+  }
+
+  private loadWeather(lat: number, lng: number): void {
+    this.weatherStatus = 'Loading weather...';
+    this.weather = null;
+
+    this.lumiApi.getWeather(lat, lng).subscribe({
+      next: (response) => {
+        this.weather = response;
+        this.weatherStatus = 'Weather loaded';
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Weather request failed:', error);
+        this.weatherStatus = `Weather error: ${error.message}`;
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -83,7 +105,7 @@ export class MapPage implements AfterViewInit, OnInit {
     }).subscribe({
       next: (response) => {
         this.recommendations = response.suggestions ?? [];
-        this.addRecommendationMarkers();
+        this.addRecommendationMarkers(lat, lng);
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -96,8 +118,14 @@ export class MapPage implements AfterViewInit, OnInit {
     });
   }
 
-  private addRecommendationMarkers(): void {
+  private addRecommendationMarkers(selectedLat: number, selectedLng: number): void {
+    const bounds = L.latLngBounds([[selectedLat, selectedLng]]);
+
     for (const item of this.recommendations) {
+      if (item.latitude == null || item.longitude == null) {
+        continue;
+      }
+
       const marker = L.marker([item.latitude, item.longitude])
         .addTo(this.map)
         .bindPopup(`
@@ -107,6 +135,11 @@ export class MapPage implements AfterViewInit, OnInit {
         `);
 
       this.recommendationMarkers.push(marker);
+      bounds.extend([item.latitude, item.longitude]);
+    }
+
+    if (bounds.isValid()) {
+      this.map.fitBounds(bounds, { padding: [40, 40] });
     }
   }
 

@@ -29,6 +29,23 @@ export interface WalkResponse {
   suggestions: Suggestion[];
 }
 
+export interface WeatherResponse {
+  timezone: string | null;
+  current: {
+    time: string | null;
+    temperature_2m: number | null;
+    apparent_temperature: number | null;
+    precipitation: number | null;
+    rain: number | null;
+    showers: number | null;
+    snowfall: number | null;
+    cloud_cover: number | null;
+    wind_speed_10m: number | null;
+  };
+  sunrise: string | null;
+  sunset: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -42,5 +59,11 @@ export class LumiApi {
 
   walk(request: WalkRequest): Observable<WalkResponse> {
     return this.http.post<WalkResponse>(`${this.baseUrl}/walk`, request);
+  }
+
+  getWeather(lat: number, lon: number): Observable<WeatherResponse> {
+    return this.http.get<WeatherResponse>(
+      `${this.baseUrl}/weather?lat=${lat}&lon=${lon}`
+    );
   }
 }
