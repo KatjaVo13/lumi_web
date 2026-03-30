@@ -1,6 +1,6 @@
 <div class="page">
   <h1>Lumi Map</h1>
-  <p>Tap the map to get coordinates.</p>
+  <p>Tap the map to get coordinates and load Lumi recommendations.</p>
 
   <div id="map"></div>
 
@@ -8,8 +8,47 @@
     <strong>Selected coordinates:</strong>
     <span>{{ selectedCoordinates }}</span>
   </div>
+
   <div class="coords">
-   <strong>Backend status:</strong>
-   <span>{{ backendStatus }}</span>
-</div>
+    <strong>Backend status:</strong>
+    <span>{{ backendStatus }}</span>
+  </div>
+
+  @if (isLoading) {
+    <div class="coords">
+      <strong>Loading:</strong>
+      <span>Lumi is looking for places...</span>
+    </div>
+  }
+
+  <div class="recommendations">
+    <h2>Lumi recommendations</h2>
+
+    @if (!isLoading && recommendations.length === 0) {
+      <p>No recommendations yet. Tap the map.</p>
+    }
+
+    @for (item of recommendations; track item.name) {
+      <div class="recommendation-card">
+        <h3>{{ item.name }}</h3>
+
+        <p><strong>Category:</strong> {{ item.category }}</p>
+        <p><strong>Area:</strong> {{ item.area }}</p>
+        <p><strong>Address:</strong> {{ item.address }}</p>
+        <p><strong>Score:</strong> {{ item.score }}</p>
+        <p>{{ item.description }}</p>
+
+        @if (item.reasoning.length > 0) {
+          <div class="reasoning">
+            <strong>Why Lumi suggests it:</strong>
+            <ul>
+              @for (reason of item.reasoning; track reason) {
+                <li>{{ reason }}</li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+    }
+  </div>
 </div>
