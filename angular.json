@@ -65,7 +65,8 @@
               "buildTarget": "lumi-web:build:production"
             },
             "development": {
-              "buildTarget": "lumi-web:build:development"
+              "buildTarget": "lumi-web:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

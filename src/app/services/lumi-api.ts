@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export interface WalkRequest {
   area: string;
@@ -46,12 +46,22 @@ export interface WeatherResponse {
   sunset: string | null;
 }
 
+interface WeatherApiResponse {
+  timezone?: string | null;
+  current?: Partial<WeatherResponse['current']> | null;
+  sunrise?: string | null;
+  sunset?: string | null;
+  temperature?: number | null;
+  windspeed?: number | null;
+  weathercode?: number | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class LumiApi {
   private http = inject(HttpClient);
-  private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'http://127.0.0.1:8000/api';
 
   getHealth(): Observable<unknown> {
     return this.http.get(`${this.baseUrl}/health`);
@@ -61,9 +71,47 @@ export class LumiApi {
     return this.http.post<WalkResponse>(`${this.baseUrl}/walk`, request);
   }
 
-  getWeather(lat: number, lon: number): Observable<WeatherResponse> {
-    return this.http.get<WeatherResponse>(
-      `${this.baseUrl}/weather?lat=${lat}&lon=${lon}`
-    );
+  getWeather(lat: number | string, lon: number | string): Observable<WeatherResponse> {
+    const params = new HttpParams({
+      fromObject: {
+        lat: this.parseCoordinate(lat, 'lat'),
+        lon: this.parseCoordinate(lon, 'lon')
+      }
+    });
+
+    return this.http
+      .get<WeatherApiResponse>(`${this.baseUrl}/weather`, { params })
+      .pipe(map((response) => this.normalizeWeather(response)));
+  }
+
+  private parseCoordinate(value: number | string, label: 'lat' | 'lon'): string {
+    const parsed = typeof value === 'number' ? value : Number.parseFloat(value.trim());
+
+    if (!Number.isFinite(parsed)) {
+      throw new Error(`Invalid ${label} coordinate: ${value}`);
+    }
+
+    return parsed.toString();
+  }
+
+  private normalizeWeather(response: WeatherApiResponse): WeatherResponse {
+    const current = response.current ?? {};
+
+    return {
+      timezone: response.timezone ?? null,
+      current: {
+        time: current.time ?? null,
+        temperature_2m: current.temperature_2m ?? response.temperature ?? null,
+        apparent_temperature: current.apparent_temperature ?? response.temperature ?? null,
+        precipitation: current.precipitation ?? null,
+        rain: current.rain ?? null,
+        showers: current.showers ?? null,
+        snowfall: current.snowfall ?? null,
+        cloud_cover: current.cloud_cover ?? response.weathercode ?? null,
+        wind_speed_10m: current.wind_speed_10m ?? response.windspeed ?? null
+      },
+      sunrise: response.sunrise ?? null,
+      sunset: response.sunset ?? null
+    };
   }
 }

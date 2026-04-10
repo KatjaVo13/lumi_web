@@ -15,27 +15,27 @@
   </div>
 
   <div class="coords">
-  <strong>Weather status:</strong>
-  <span>{{ weatherStatus }}</span>
-</div>
-
-@if (weather) {
-  <div class="recommendation-card">
-    <h2>Location context</h2>
-
-    <p><strong>Timezone:</strong> {{ weather.timezone }}</p>
-    <p><strong>Local time:</strong> {{ weather.current.time }}</p>
-    <p><strong>Temperature:</strong> {{ weather.current.temperature_2m }} °C</p>
-    <p><strong>Feels like:</strong> {{ weather.current.apparent_temperature }} °C</p>
-    <p><strong>Wind:</strong> {{ weather.current.wind_speed_10m }} km/h</p>
-    <p><strong>Cloud cover:</strong> {{ weather.current.cloud_cover }} %</p>
-    <p><strong>Rain:</strong> {{ weather.current.rain }}</p>
-    <p><strong>Showers:</strong> {{ weather.current.showers }}</p>
-    <p><strong>Snowfall:</strong> {{ weather.current.snowfall }}</p>
-    <p><strong>Sunrise:</strong> {{ weather.sunrise }}</p>
-    <p><strong>Sunset:</strong> {{ weather.sunset }}</p>
+    <strong>Weather status:</strong>
+    <span>{{ weatherStatus }}</span>
   </div>
-}
+
+  @if (weather) {
+    <div class="recommendation-card">
+      <h2>Location context</h2>
+
+      <p><strong>Timezone:</strong> {{ weather.timezone }}</p>
+      <p><strong>Local time:</strong> {{ weather.current.time }}</p>
+      <p><strong>Temperature:</strong> {{ weather.current.temperature_2m }} degrees C</p>
+      <p><strong>Feels like:</strong> {{ weather.current.apparent_temperature }} degrees C</p>
+      <p><strong>Wind:</strong> {{ weather.current.wind_speed_10m }} km/h</p>
+      <p><strong>Cloud cover:</strong> {{ weather.current.cloud_cover }} %</p>
+      <p><strong>Rain:</strong> {{ weather.current.rain }}</p>
+      <p><strong>Showers:</strong> {{ weather.current.showers }}</p>
+      <p><strong>Snowfall:</strong> {{ weather.current.snowfall }}</p>
+      <p><strong>Sunrise:</strong> {{ weather.sunrise }}</p>
+      <p><strong>Sunset:</strong> {{ weather.sunset }}</p>
+    </div>
+  }
 
   @if (isLoading) {
     <div class="coords">
