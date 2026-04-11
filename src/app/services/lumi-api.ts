@@ -30,14 +30,15 @@ export interface WalkResponse {
 }
 
 export interface NearbyPlace {
-  id?: string | number | null;
+  osm_id: number | null;
+  osm_type: string | null;
   name: string;
-  category: string | null;
-  area: string | null;
-  description: string | null;
   latitude: number | null;
   longitude: number | null;
+  category: string | null;
+  subcategory: string | null;
   address: string | null;
+  distance_meters: number | null;
 }
 
 export interface WeatherResponse {
@@ -68,19 +69,15 @@ interface WeatherApiResponse {
 }
 
 interface NearbyPlaceApiItem {
-  id?: string | number | null;
+  osm_id?: number | null;
+  osm_type?: string | null;
   name?: string | null;
-  category?: string | null;
-  type?: string | null;
-  area?: string | null;
-  district?: string | null;
-  description?: string | null;
   latitude?: number | null;
   longitude?: number | null;
-  lat?: number | null;
-  lon?: number | null;
-  lng?: number | null;
+  category?: string | null;
+  subcategory?: string | null;
   address?: string | null;
+  distance_meters?: number | null;
 }
 
 interface NearbyPlacesApiResponse {
@@ -169,14 +166,15 @@ export class LumiApi {
       : response.places ?? response.results ?? response.items ?? [];
 
     return places.map((place) => ({
-      id: place.id ?? null,
+      osm_id: place.osm_id ?? null,
+      osm_type: place.osm_type ?? null,
       name: place.name ?? 'Unnamed place',
-      category: place.category ?? place.type ?? null,
-      area: place.area ?? place.district ?? null,
-      description: place.description ?? null,
-      latitude: place.latitude ?? place.lat ?? null,
-      longitude: place.longitude ?? place.lng ?? place.lon ?? null,
-      address: place.address ?? null
+      latitude: place.latitude ?? null,
+      longitude: place.longitude ?? null,
+      category: place.category ?? null,
+      subcategory: place.subcategory ?? null,
+      address: place.address ?? null,
+      distance_meters: place.distance_meters ?? null
     }));
   }
 }

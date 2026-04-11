@@ -43,17 +43,18 @@
         <p>No nearby places found for this point.</p>
       }
 
-      @for (place of nearbyPlaces; track place.id ?? place.name) {
+      @for (place of nearbyPlaces; track place.osm_id ?? place.name) {
         <div class="recommendation-card">
           <h3>{{ place.name }}</h3>
 
+          <p><strong>OSM ID:</strong> {{ place.osm_id ?? 'Unknown' }}</p>
+          <p><strong>OSM type:</strong> {{ place.osm_type ?? 'Unknown' }}</p>
+          <p><strong>Latitude:</strong> {{ place.latitude ?? 'Unknown' }}</p>
+          <p><strong>Longitude:</strong> {{ place.longitude ?? 'Unknown' }}</p>
           <p><strong>Category:</strong> {{ place.category ?? 'Unknown' }}</p>
-          <p><strong>Area:</strong> {{ place.area ?? 'Unknown' }}</p>
+          <p><strong>Subcategory:</strong> {{ place.subcategory ?? 'Unknown' }}</p>
           <p><strong>Address:</strong> {{ place.address ?? 'Unknown' }}</p>
-
-          @if (place.description) {
-            <p>{{ place.description }}</p>
-          }
+          <p><strong>Distance:</strong> {{ place.distance_meters ?? 'Unknown' }} meters</p>
         </div>
       }
     </div>

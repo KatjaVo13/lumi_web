@@ -104,28 +104,30 @@ describe('LumiApi', () => {
     request.flush({
       places: [
         {
-          id: '1',
+          osm_id: 123,
+          osm_type: 'node',
           name: 'Cafe Esplanad',
-          type: 'cafe',
-          district: 'Kaartinkaupunki',
-          description: 'Popular cafe',
-          lat: 60.1675,
-          lng: 24.9476,
-          address: 'Pohjoisesplanadi 37'
+          latitude: 60.1675,
+          longitude: 24.9476,
+          category: 'amenity',
+          subcategory: 'cafe',
+          address: 'Pohjoisesplanadi 37, 00100, Helsinki',
+          distance_meters: 12
         }
       ]
     });
 
     expect(actual).toEqual([
       {
-        id: '1',
+        osm_id: 123,
+        osm_type: 'node',
         name: 'Cafe Esplanad',
-        category: 'cafe',
-        area: 'Kaartinkaupunki',
-        description: 'Popular cafe',
         latitude: 60.1675,
         longitude: 24.9476,
-        address: 'Pohjoisesplanadi 37'
+        category: 'amenity',
+        subcategory: 'cafe',
+        address: 'Pohjoisesplanadi 37, 00100, Helsinki',
+        distance_meters: 12
       }
     ]);
   });

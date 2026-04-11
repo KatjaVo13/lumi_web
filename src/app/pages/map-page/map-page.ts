@@ -122,8 +122,12 @@ export class MapPage implements AfterViewInit, OnInit {
         .addTo(this.map)
         .bindPopup(`
           <strong>${item.name}</strong><br>
-          ${item.category ?? 'Place'}<br>
-          ${item.address ?? ''}
+          OSM ID: ${item.osm_id ?? 'Unknown'}<br>
+          OSM Type: ${item.osm_type ?? 'Unknown'}<br>
+          Category: ${item.category ?? 'Unknown'}<br>
+          Subcategory: ${item.subcategory ?? 'Unknown'}<br>
+          Address: ${item.address ?? 'Unknown'}<br>
+          Distance: ${item.distance_meters ?? 'Unknown'} meters
         `);
 
       this.nearbyPlaceMarkers.push(marker);
