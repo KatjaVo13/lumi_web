@@ -1,59 +1,32 @@
-# LumiWeb
+# Web UI
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.5.
 
-## Development server
+## Role
 
-To start a local development server, run:
+Angular browser client for primary product workflows and administration.
 
-```bash
-ng serve
-```
+## Assumed stack
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Angular, TypeScript, RxJS, browser runtime.
 
-## Code scaffolding
+## Why this repository exists
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+This repo follows the same coordination layout as the other product repositories so AI agents can move between repos without learning a new workflow every time.
 
-```bash
-ng generate component component-name
-```
+## Read first
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+1. `AGENTS.md`
+2. `CLAUDE.md`
+3. `docs/architecture/overview.md`
+4. `docs/development/setup.md`
+5. `docs/development/test.md`
+6. `docs/coordination/STATUS.md`
+7. `docs/coordination/CROSS-REPO.md`
 
-```bash
-ng generate --help
-```
+## Minimum local workflow
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- install dependencies
+- run static checks
+- run relevant tests
+- update coordination files when work changes status or cross-repo assumptions

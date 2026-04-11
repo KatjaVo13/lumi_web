@@ -1,0 +1,24 @@
+# CROSS-REPO IMPACT
+
+## Contract ownership
+Web UI owns browser rendering, forms, and navigation. It does not own business rules, final authorization checks, or canonical error taxonomy.
+
+## Shared assumptions to keep aligned
+- auth token format and renewal rules
+- error envelope shape and stable machine-readable error codes
+- pagination, filtering, sorting, and timestamp semantics
+- locale and timezone handling
+- idempotency or retry behavior for writes
+- file upload or media handling if present
+
+## Client matrix
+| Capability | Backend | Web | Mobile | Embedded |
+|---|---|---|---|---|
+| Canonical business rules | yes | no | no | no |
+| Rich admin UI | no | yes | limited | no |
+| Offline-first behavior | no | limited | yes | likely yes |
+| Push/background workflows | no | limited | yes | platform-specific |
+| Compact protocol pressure | medium | low | medium | high |
+
+## Repository-specific note
+Web UI owns browser rendering, forms, and navigation. It does not own business rules, final authorization checks, or canonical error taxonomy.
